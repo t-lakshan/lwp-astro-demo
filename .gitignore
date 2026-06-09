@@ -1,0 +1,21 @@
+# macOS junk
+.DS_Store
+
+# Local tooling / editor state
+.claude/
+.idea/
+.vscode/
+.playwright-mcp/
+
+# Node deps & build output (also covered by astro-site/.gitignore)
+node_modules/
+dist/
+.astro/
+
+# Logs
+*-debug.log*
+
+# Environment / secrets
+.env
+.env.*
+!.env.example

@@ -1,0 +1,55 @@
+---
+// About / Vision section — the "Clarity over chaos" block with Rino's photo.
+// Almost all of this is plain content from WordPress; only the card layout,
+// accents, shadows and cube-light background are fixed design.
+interface Props {
+  label: string;
+  title: string;
+  body: string;          // WYSIWYG HTML from WP — rendered with set:html
+  quote: string;
+  quoteAuthor: string;
+  statNumber: string;
+  statLabel: string;
+  portrait: string;      // image URL from WP; falls back to the CSS default if empty
+}
+const { label, title, body, quote, quoteAuthor, statNumber, statLabel, portrait } = Astro.props;
+---
+
+<!-- VISION — lavender card with cube-light-bg cluster peeking from lower-right -->
+<section class="vision">
+  <div class="vision-card">
+    <div class="vision-layout">
+      <!-- Left: photo + overlapping cards -->
+      <div class="vision-left">
+        <!-- Floating stat badge -->
+        <div class="vision-stat-badge">
+          <div class="vision-stat-num">{statNumber}</div>
+          <div class="vision-stat-lbl">{statLabel}</div>
+        </div>
+
+        <div
+          class="vision-photo"
+          role="img"
+          aria-label="Portrait of Rino de Boer"
+          style={portrait ? `background-image:url('${portrait}')` : undefined}
+        ></div>
+
+        <!-- Floating quote card -->
+        <div class="vision-quote-card">
+          <p>{quote}</p>
+          <div class="vision-quote-meta">
+            <div class="vision-quote-dot"></div>
+            <span class="vision-quote-name">{quoteAuthor}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: text -->
+      <div class="vision-right">
+        <div class="section-label">{label}</div>
+        <h2 class="section-title">{title}</h2>
+        <div set:html={body} />
+      </div>
+    </div>
+  </div>
+</section>

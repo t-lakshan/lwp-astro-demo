@@ -1,0 +1,27 @@
+---
+// Homepage. Fetches the WP Home page once and feeds its fields into each section.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import FocusedGuides from '../components/FocusedGuides.astro';
+import { getHome, getGuides } from '../lib/wp';
+
+const home = await getHome();
+const meta = home.meta;
+const guides = await getGuides();
+---
+
+<BaseLayout>
+  <Hero subheading={meta.hero_subheading} ctaLabel={meta.hero_cta_label} />
+  <About
+    label={meta.about_label}
+    title={meta.about_title}
+    body={meta.about_body}
+    quote={meta.about_quote}
+    quoteAuthor={meta.about_quote_author}
+    statNumber={meta.about_stat_number}
+    statLabel={meta.about_stat_label}
+    portrait={meta.rino_portrait}
+  />
+  <FocusedGuides guides={guides} />
+</BaseLayout>

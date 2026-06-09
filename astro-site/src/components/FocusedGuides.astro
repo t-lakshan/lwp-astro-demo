@@ -1,0 +1,79 @@
+---
+// Focused Guides section — loops over the focused_guide CPT and renders one card
+// per guide. The card cover is a designed element: a branded "number cover"
+// generated from the guide's position + title + format. If a guide has an uploaded
+// cover image (guide_cover), that card shows the image instead.
+// The card links to the single guide page (/guides/<slug>).
+interface Guide {
+  slug: string;
+  title: { rendered: string };
+  meta: {
+    guide_format: string;
+    guide_price: string | number;
+    guide_excerpt: string;
+    guide_cover: string;
+    guide_buy_url: string;
+  };
+}
+interface Props {
+  guides: Guide[];
+}
+const { guides } = Astro.props;
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<!-- FOCUSED GUIDES -->
+<section class="focused-guides" id="guides">
+  <div class="container">
+    <div class="fg-header">
+      <div>
+        <div class="section-label">Focused guides</div>
+        <h2 class="section-title">Go deeper</h2>
+      </div>
+      <p class="section-subtitle">Each guide solves one specific problem in your workflow. Small investment, immediately usable.</p>
+    </div>
+
+    <div class="fg-cards">
+      {guides.map((g, i) => {
+        const num = pad(i + 1);
+        const variant = (i % 4) + 1;
+        const cover = g.meta.guide_cover;
+        return (
+          <a class="fg-card" href={`/guides/${g.slug}`}>
+            {cover ? (
+              <div class={`fg-cover fg-cover-${variant} has-image`} aria-hidden="true">
+                <img src={cover} alt="" loading="lazy" />
+              </div>
+            ) : (
+              <div class={`fg-cover fg-cover-${variant}`} aria-hidden="true">
+                <div class="fg-cover-top">
+                  <span class="fg-cover-brand">LWP</span>
+                  <span>N° {num}</span>
+                </div>
+                <div class="fg-cover-mid">
+                  <div class="fg-cover-num">{num}</div>
+                  <div class="fg-cover-title">{g.title.rendered}</div>
+                </div>
+                <div class="fg-cover-bot">
+                  <div class="fg-cover-pixels"><span></span><span></span><span></span></div>
+                  <div class="fg-cover-fmt">{g.meta.guide_format}</div>
+                </div>
+              </div>
+            )}
+            <div class="fg-card-body">
+              <span class="fg-card-tag">{g.meta.guide_format}</span>
+              <h3>{g.title.rendered}</h3>
+              <p>{g.meta.guide_excerpt}</p>
+              <div class="fg-card-foot">
+                <span class="fg-card-cta">
+                  <span class="fg-card-cta-price">${g.meta.guide_price}</span>
+                  <span class="fg-card-cta-label">Get the guide<span class="fg-card-cta-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h11"/><path d="M11.5 6.5 17 12l-5.5 5.5"/></svg></span></span>
+                </span>
+              </div>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  </div>
+</section>

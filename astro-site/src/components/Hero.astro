@@ -1,0 +1,138 @@
+---
+// Hero section.
+// The headline is a designed element (cube video on "good", course-cover stack on
+// "thousand") — kept static. The subheading and the form button label come from
+// WordPress (props passed in from the page).
+interface Props {
+  subheading: string;
+  ctaLabel: string;
+}
+const { subheading, ctaLabel } = Astro.props;
+---
+
+<section class="hero">
+  <!-- Cube wall background: SVG injected by the script below -->
+  <div class="hero-bg-cubes" aria-hidden="true"></div>
+
+  <!-- Community: members floating around the headline -->
+  <div class="hero-community" aria-hidden="true">
+    <div class="hero-member m-1">
+      <div class="hero-member-photo"><img src="/images/testimonial%20image/uifaces-popular-avatar%20(3).jpg" alt="" /></div>
+      <span class="hero-member-name">Amara</span>
+    </div>
+    <div class="hero-member m-2 is-lime">
+      <div class="hero-member-photo"><img src="/images/testimonial%20image/uifaces-popular-avatar%20(4).jpg" alt="" /></div>
+      <span class="hero-member-name">Leo</span>
+    </div>
+    <div class="hero-member m-3">
+      <div class="hero-member-photo"><img src="/images/testimonial%20image/uifaces-popular-avatar%20(6).jpg" alt="" /></div>
+      <span class="hero-member-name">Mia</span>
+    </div>
+    <div class="hero-member m-4">
+      <div class="hero-member-photo"><img src="/images/testimonial%20image/uifaces-popular-avatar%20(2).jpg" alt="" /></div>
+      <span class="hero-member-name">Jonas</span>
+    </div>
+    <div class="hero-member m-5 is-lime">
+      <div class="hero-member-photo"><img src="/images/testimonial%20image/uifaces-popular-avatar%20(7).jpg" alt="" /></div>
+      <span class="hero-member-name">Sana</span>
+    </div>
+    <div class="hero-member m-6">
+      <div class="hero-member-photo"><img src="/images/testimonial%20image/uifaces-popular-avatar%20(5).jpg" alt="" /></div>
+      <span class="hero-member-name">Theo</span>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <h1>A <span class="h1-word">good<span class="h1-cube" aria-hidden="true"><video src="/images/3d-cube.mp4" autoplay muted loop playsinline poster="/images/3d-cube-poster.jpg"></video></span></span> system beats a <span class="h1-word">thousand<span class="h1-stack" aria-hidden="true"><img src="/images/wp%20course%20img2.png" alt="" /><img src="/images/Web%20Apps%20for%20Clients%20img.png" alt="" /><img src="/images/ai%20website%20course%20img.png" alt="" /><img src="/images/Build%20Your%20First%20AI%20Website%20in%202%20Hours.png" alt="" /></span></span> <em>tutorials</em></h1>
+    <p class="hero-sub">{subheading}</p>
+
+    <form class="hero-form" action="#" method="post">
+      <input type="text" name="first_name" placeholder="Your first name" autocomplete="given-name" />
+      <input type="email" name="email" placeholder="Your email" autocomplete="email" required />
+      <button type="submit" class="btn btn-lime">{ctaLabel}</button>
+    </form>
+    <p class="hero-note">Free to join &nbsp;·&nbsp; No spam &nbsp;·&nbsp; Unsubscribe anytime</p>
+
+    <div class="hero-live-chip">
+      <span class="hero-live-chip-avatars">
+        <img src="/images/testimonial%20image/uifaces-popular-avatar%20(3).jpg" alt="" />
+        <img src="/images/testimonial%20image/uifaces-popular-avatar%20(4).jpg" alt="" />
+        <img src="/images/testimonial%20image/uifaces-popular-avatar%20(6).jpg" alt="" />
+      </span>
+      2,400+ readers — join the email club
+    </div>
+  </div>
+</section>
+
+<script>
+  // Cube wall — generate a tiled hex (cube) SVG inside any matching host.
+  // Used for the hero background (and later .cube-cluster decorations).
+  (function () {
+    const SELECTOR = '.hero-bg-cubes, .cube-cluster';
+    const NS = 'http://www.w3.org/2000/svg';
+    const R = 44;                  // hex circumradius — also cube half-height
+    const W = R * Math.sqrt(3);    // hex width (edge-to-edge)
+    const ALPHAS = [0.06, 0.13, 0.18]; // lit / mid / shadow
+
+    function renderInto(host) {
+      host.replaceChildren();
+      const cw = host.clientWidth;
+      const ch = host.clientHeight;
+      if (!cw || !ch) return;
+
+      const svg = document.createElementNS(NS, 'svg');
+      svg.setAttribute('viewBox', `0 0 ${cw} ${ch}`);
+      svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+
+      let seed = 1729 + (host.__cubeSeed || 0);
+      const rng = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+      const alphaScale = parseFloat(host.dataset.alphaScale) || 1;
+
+      let row = 0;
+      for (let cy = -R; cy < ch + R; cy += 1.5 * R) {
+        const offset = (row % 2 === 1) ? W / 2 : 0;
+        for (let cx = offset - W / 2; cx < cw + W; cx += W) {
+          const a = ALPHAS.map((x) => Math.min(1, x * alphaScale));
+          for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(rng() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+          }
+          const [aTop, aLeft, aRight] = a;
+
+          const top = [cx, cy - R];
+          const ul = [cx - W / 2, cy - R / 2];
+          const ur = [cx + W / 2, cy - R / 2];
+          const ll = [cx - W / 2, cy + R / 2];
+          const lr = [cx + W / 2, cy + R / 2];
+          const bot = [cx, cy + R];
+
+          const path = (d, alpha) => {
+            const p = document.createElementNS(NS, 'path');
+            p.setAttribute('d', d);
+            p.setAttribute('fill', `rgba(124,92,252,${alpha})`);
+            svg.appendChild(p);
+          };
+          const r = (a, b, c) => `M${cx},${cy} L${a[0]},${a[1]} L${b[0]},${b[1]} L${c[0]},${c[1]} Z`;
+
+          path(r(ul, top, ur), aTop);   // top face
+          path(r(bot, ll, ul), aLeft);  // left face
+          path(r(ur, lr, bot), aRight); // right face
+        }
+        row++;
+      }
+
+      host.appendChild(svg);
+    }
+
+    function renderAll() {
+      document.querySelectorAll(SELECTOR).forEach((host, i) => {
+        host.__cubeSeed = i * 137;
+        renderInto(host);
+      });
+    }
+
+    renderAll();
+    let t;
+    window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(renderAll, 200); });
+  })();
+</script>
