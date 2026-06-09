@@ -1,0 +1,11 @@
+{
+  // Cloudflare Workers (Static Assets) config for the LWP Astro demo.
+  // The site is fully static, so there is no Worker script (no "main"): Cloudflare
+  // just serves the files Astro builds into ./dist. The dashboard "Root directory"
+  // is set to astro-site, so Cloudflare runs `npm run build` here and serves ./dist.
+  "name": "lwp-astro-demo",
+  "compatibility_date": "2026-06-09",
+  "assets": {
+    "directory": "./dist"
+  }
+}
