@@ -4,6 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import About from '../components/About.astro';
 import FocusedGuides from '../components/FocusedGuides.astro';
+import CtaBanner from '../components/CtaBanner.astro';
 import { getHome, getGuides } from '../lib/wp';
 
 const home = await getHome();
@@ -24,4 +25,5 @@ const guides = await getGuides();
     portrait={meta.rino_portrait}
   />
   <FocusedGuides guides={guides} />
+  <CtaBanner />
 </BaseLayout>
