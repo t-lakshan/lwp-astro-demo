@@ -1,0 +1,120 @@
+---
+// Newsletter — simple email sign-up band. Hardcoded copy; no WP fields needed.
+// Light lavender section so it sits between the white Guides and the dark CtaBanner.
+// A tiny inline script swaps in a thank-you message on submit (demo only, no backend).
+---
+
+<section class="newsletter section-m">
+  <div class="newsletter-inner">
+    <div class="section-label centered">Newsletter</div>
+    <h2 class="section-title">Get the weekly LWP email</h2>
+    <p class="newsletter-sub">
+      One short email a week — new guides, AI workflows, and the occasional behind-the-scenes note. No spam, unsubscribe anytime.
+    </p>
+
+    <form class="newsletter-form" novalidate>
+      <input
+        type="email"
+        name="email"
+        class="newsletter-input"
+        placeholder="you@example.com"
+        aria-label="Email address"
+        required
+      />
+      <button type="submit" class="btn btn-purple">Subscribe</button>
+    </form>
+
+    <p class="newsletter-note" hidden data-success>🎉 Thanks — you're on the list!</p>
+  </div>
+</section>
+
+<script>
+  // Demo-only handler: no backend, just confirm the sign-up visually.
+  const form = document.querySelector('.newsletter-form');
+  const note = document.querySelector('[data-success]');
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!(form instanceof HTMLFormElement) || !form.reportValidity()) return;
+    form.hidden = true;
+    if (note) note.hidden = false;
+  });
+</script>
+
+<style>
+  .newsletter {
+    background: var(--brand-light-3);
+    padding-left:  var(--section-container);
+    padding-right: var(--section-container);
+  }
+
+  .newsletter-inner {
+    max-width: 620px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--size-16);
+  }
+
+  .newsletter .section-title {
+    margin: 0;
+  }
+
+  .newsletter-sub {
+    font-family: var(--body-font);
+    font-size: var(--body-l);
+    line-height: 1.7;
+    color: var(--brand-dark-2);
+    max-width: 480px;
+    margin: 0;
+  }
+
+  .newsletter-form {
+    display: flex;
+    gap: var(--size-8);
+    width: 100%;
+    max-width: 460px;
+    margin-top: var(--size-8);
+  }
+
+  .newsletter-input {
+    flex: 1;
+    min-width: 0;
+    padding: var(--size-16) var(--size-16);
+    background: #fff;
+    border: 1.5px solid var(--brand-light-3);
+    border-radius: var(--rounded-s);
+    font-family: var(--body-font);
+    font-size: var(--body-m);
+    color: var(--brand-dark-1);
+    box-shadow: 0 2px 10px rgba(13,11,26,0.05);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .newsletter-input::placeholder { color: var(--brand-dark-3); }
+  .newsletter-input:focus {
+    outline: none;
+    border-color: var(--brand-accent);
+    box-shadow: 0 0 0 3px var(--brand-accent-4);
+  }
+
+  .newsletter-form .btn { padding: var(--size-16) var(--size-24); }
+
+  .newsletter-note {
+    font-family: var(--heading-font);
+    font-weight: 800;
+    font-size: var(--title-size-6);
+    color: var(--brand-accent);
+    margin: 0;
+  }
+
+  /* Responsive — stack input + button on small screens */
+  @media (max-width: 520px) {
+    .newsletter-form {
+      flex-direction: column;
+    }
+    .newsletter-form .btn {
+      width: 100%;
+    }
+  }
+</style>
